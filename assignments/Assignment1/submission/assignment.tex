@@ -35,7 +35,7 @@
 %   IMPORTANT: Specify your Student ID below [You will need to uncomment the line, 
 %	else compilation will fail]. Make sure to specify your student ID correctly, otherwise
 %   we may not be able to identify your work an dyou will be marked as missing.
-\newcommand{\assignmentAuthorName}{s1234567}
+\newcommand{\assignmentAuthorName}{s1705544}
 %--------------------------------------------------------
 
 \begin{document}
@@ -98,11 +98,13 @@ The following are links to Gradescope's own instructions for using the system an
 
 \answer[10em]{\textbf{Answer Box (1.)}:\\%
     % Fill in this box with your answer to part 1
+    Naive Bayes assumes that each feature value in the same class are all independent, regardless of any correlation between the different features of that class. So the words are randomly distributed across the document.
 }
 
 
 \answer[15em]{\textbf{Answer Box (2.)}:\\%
     % Fill in this box with your answer to part 1
+    Without the assumption, we need to calculate a 520-dimensional Gaussian for each class, but with the assumption, we just need to calculate 520 1-dimensional Gaussians for each class, which requires less calculations.
 }
 
 \subsubsection*{Question 2.6 (3 points)}
@@ -112,6 +114,7 @@ The following are links to Gradescope's own instructions for using the system an
 
 \answer[15em]{\textbf{Answer Box (1.)}:\\%
     % Fill in this box with your answer to part 1
+    The confusion matrix gives a good represenatation of the performance of the model and is better than the baseline. This model performs reasonable for the dataset and reaches around 87.8\% accuracy and the main diagonal is close to 1 as expected, so accuracy is a reasonable metric to use as it is a multi-class classifier and the correct classification for each class matters.
 }
 
 
@@ -143,21 +146,39 @@ In class we discussed ways of preprocessing features to improve performance in s
 \begin{code}{Answer Box (1.)}{25em}
     Enter your code for part 1 here.
 
-    import python;
-    example = 'code';
+    auto_numeric_copy = auto_numeric.copy()
+    plt.scatter(x=np.log(auto_numeric_copy['engine-size']), y=auto_numeric_copy['price'])
+    plt.title("price vs. engine-size")
+    plt.xlabel('engine-size')
+    plt.ylabel('price')
+    plt.show()
+    
 \end{code}
 
 
 \begin{code}{Answer Box (2.)}{25em}
     Enter your code for part 2 here.
 
-    import python;
-    example = 'code';
+    auto_numeric_copy['engine-size'] = np.log2(auto_numeric_copy['engine-size'])
+
+    X = auto_numeric_copy.drop('price',axis = 1)
+    y = auto_numeric_copy['price']
+
+    lr = LinearRegression(fit_intercept=True, normalize=True, copy_X=True, n_jobs=1)
+    pred_cv = cross_val_predict(lr, X, y, cv=kf)
+
+    r2 = r2_score(price, pred_cv)
+    rmse = np.sqrt(mean_squared_error(price, pred_cv))
+    print('The Coefficient of Determination (R^2) on linear regression: {}'.format(r2))
+    print('The Root Mean Squared Error (RMSE) on linear regression: {}'.format(rmse))
 \end{code}
 
 
 \answer[15em]{\textbf{Answer Box (3.)}:\\%
     % Fill in this box with your answer to part 2
+    The performance is better when compared to the previous results. 
+    This increase in performance is because linear regression is sensitive to outliers and outliers exist in engine-size. 
+    The outliers have a relatively large value, the logarithm minimises the value, and the influence of the outliers would minimise with it. 
 }
 
 
